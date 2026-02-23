@@ -3,18 +3,18 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    InputActionAsset inputActions;
+    [Header("References")]
+    private CharacterController characterController;
 
-    InputAction moveAction;
-    InputAction lookAction;
-    InputAction jumpAction;
+    [Header("Movement Settings")]
+    [SerializeField] private float walkSpeed = 5f;
 
-    private Vector2 moveInput;
-    private Vector2 lookInput;
-
-    public float speed = 5;
-    public float rotateSpeed = 5;
-    public float jumpSpeed = 5;
+    [Header("Input")]
+    [SerializeField] private InputActionAsset inputActions;
+    private InputAction moveAction;
+    Vector2 moveInput;
+    private float horizontalInput;
+    private float verticalInput;
 
     private void OnEnable()
     {
@@ -26,16 +26,24 @@ public class PlayerController : MonoBehaviour
     }
     private void Awake()
     {
-        moveAction = InputSystem.actions.FindAction("Move");
-        lookAction = InputSystem.actions.FindAction("Look");
-        jumpAction = InputSystem.actions.FindAction("Jump");
+        moveAction = inputActions.FindAction("Move");
 
+        moveInput = moveAction.ReadValue<Vector2>();
+
+        horizontalInput = moveInput.x;
+        verticalInput = moveInput.y;
     }
+
     private void Update()
     {
-        moveInput = moveAction.ReadValue<Vector2>();
-        lookInput = lookAction.ReadValue<Vector2>();
+        InputManagement();
+    }
+    private void InputManagement()
+    {
 
-
+    }
+    private void GroundMovement()
+    {
+        Vector3 move = new Vector3(horizontalInput, 0, verticalInput);
     }
 }
