@@ -1,10 +1,11 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("References")]
-    private CharacterController characterController;
+    [SerializeField] private CharacterController characterController;
 
     [Header("Movement Settings")]
     [SerializeField] private float walkSpeed = 5f;
@@ -27,23 +28,39 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         moveAction = inputActions.FindAction("Move");
-
-        moveInput = moveAction.ReadValue<Vector2>();
-
-        horizontalInput = moveInput.x;
-        verticalInput = moveInput.y;
     }
 
     private void Update()
     {
         InputManagement();
+        Movement();
     }
     private void InputManagement()
     {
+        moveInput = moveAction.ReadValue<Vector2>();
+        horizontalInput = moveInput.x;
+        verticalInput = moveInput.y;
 
+        Debug.Log($"Move Input: {moveInput} | H: {horizontalInput} | V: {verticalInput}");
     }
     private void GroundMovement()
     {
         Vector3 move = new Vector3(horizontalInput, 0, verticalInput);
+
+        move.y = 0;
+
+        move *= walkSpeed;
+
+        Debug.Log($"Moving: {move * Time.deltaTime}");
+
+        characterController.Move(move * Time.deltaTime);
+    }
+    private void Movement()
+    {
+        GroundMovement();
+    }
+    private void Turn()
+    {
+
     }
 }
